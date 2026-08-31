@@ -11,7 +11,11 @@ components:
   - name: tally
     dir: rust
     runner: cargo-nextest
-    args: ["--workspace"]
+    # --run-ignored=all reaches the test that needs the compose service below.
+    # Without it the service declaration would be decorative: nothing in the
+    # suite would ever connect, and removing the compose block would change
+    # nothing observable.
+    args: ["--workspace", "--run-ignored=all"]
     # Makefile and VERSION sit under no component, and tally-cli embeds VERSION.
     watch: ["Makefile", "VERSION"]
     compose:

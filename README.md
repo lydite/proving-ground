@@ -63,6 +63,11 @@ able to acknowledge a mutant.
 Everything passes with no container runtime present. The tests that need
 Postgres are skipped: `#[ignore]` in Rust, and `PROVING_GROUND_PG` in Go.
 
+lydite runs those tests rather than skipping them, because it brings the
+services up first — the `tally` component passes `--run-ignored=all` and the
+`api` component sets `PROVING_GROUND_PG`. That is what keeps the two compose
+declarations load-bearing: delete either one and a suite starts failing.
+
 ```sh
 make test                     # every component's suite
 make spec                     # regenerate docs/openapi.json from go/api
