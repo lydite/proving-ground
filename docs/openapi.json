@@ -1,0 +1,50 @@
+{
+  "components": {
+    "schemas": {
+      "Counter": {
+        "properties": {
+          "count": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "count"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "proving-ground counters",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/counters": {
+      "get": {
+        "operationId": "listCounters",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Counter"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "the counters, ordered by name"
+          }
+        },
+        "summary": "List every counter"
+      }
+    }
+  }
+}

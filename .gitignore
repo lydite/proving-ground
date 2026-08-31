@@ -1,0 +1,4 @@
+node_modules/
+rust/target/
+web/coverage/
+coverage.out

@@ -1,0 +1,12 @@
+{
+  "name": "@proving-ground/app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/main.tsx",
+  "dependencies": {
+    "@proving-ground/ui": "0.1.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  }
+}

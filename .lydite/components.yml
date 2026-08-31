@@ -1,0 +1,46 @@
+# The component declaration this repository exists to exercise, following
+# ADR 0016 in lydite/lydite.
+#
+# A component is the unit its build tool treats as a whole. rust/ is one Cargo
+# workspace of three crates and so one component, even though tally-cli is the
+# only deployable in it; web/ is one npm workspace of two packages sharing one
+# node_modules. go/api and go/sdk are separate modules with separate version
+# lines, which is the case where splitting genuinely is correct.
+
+components:
+  - name: tally
+    dir: rust
+    runner: cargo-nextest
+    args: ["--workspace"]
+    # Makefile and VERSION sit under no component, and tally-cli embeds VERSION.
+    watch: ["Makefile", "VERSION"]
+    compose:
+      file: ./compose.yaml
+      up: [postgres]
+      wait: healthy
+
+  - name: api
+    dir: go/api
+    runner: go-test
+    args: ["./..."]
+    compose:
+      file: ./compose.yaml
+      up: [db]
+      wait: healthy
+    env:
+      PROVING_GROUND_PG: "1"
+
+  - name: sdk
+    dir: go/sdk
+    runner: go-test
+    args: ["./..."]
+    # The client is derived from the spec api emits; no tool sees that edge.
+    depends_on: [api]
+    watch: ["docs/openapi.json"]
+
+  - name: web
+    dir: web
+    runner: vitest
+    args: ["run"]
+    depends_on: [api]
+    watch: ["docs/openapi.json"]

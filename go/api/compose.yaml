@@ -1,0 +1,17 @@
+# The service is named `db` while rust/compose.yaml names its own `postgres`.
+# The names differ and the published host port does not: the scheduler has to
+# serialise these two components on the port, which a name-keyed lock would miss.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: api
+      POSTGRES_PASSWORD: api
+      POSTGRES_DB: api
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U api -d api"]
+      interval: 2s
+      timeout: 3s
+      retries: 15

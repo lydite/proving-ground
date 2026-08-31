@@ -1,0 +1,12 @@
+[package]
+name = "tally-cli"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "tally"
+path = "src/main.rs"
+
+[dependencies]
+tally-core = { path = "../tally-core" }
