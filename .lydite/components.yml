@@ -41,6 +41,10 @@ components:
   - name: web
     dir: web
     runner: vitest
-    args: ["run"]
+    # No args: the vitest runner supplies `run` itself, because a bare
+    # `vitest` starts watch mode and must never be a CI default. A second
+    # `run` here is not ignored — vitest reads a positional argument as a
+    # filename filter, so it selects no test file and the component fails
+    # with "No test files found".
     depends_on: [api]
     watch: ["docs/openapi.json"]
