@@ -25,6 +25,7 @@ the behaviour it exists to prove. Before "correcting" anything, check this table
 | the root `Makefile` and `VERSION` sit under no component | files outside every component that invalidate exactly one. Only `tally` watches them |
 | `tally-cli` embeds `VERSION` with `include_str!` | it makes that `watch` entry real. A `VERSION` nothing reads would let the entry be deleted with every test still passing |
 | **`scripts/seed.ts` is under no component and is not excluded** | the orphan gate must fire on it. See below |
+| **`generated/client.ts` is under no component and *is* excluded** | the other half of the same gate: an exclude must clear an orphan. See below |
 | four functions have poor or missing tests | mutation is only observable when mutants survive. See below |
 
 ### `scripts/seed.ts` is meant to be an orphan
@@ -38,6 +39,23 @@ not work — `web/` is an npm workspace and `scripts/` is outside it. Declaring 
 component for it does not work either — nothing tests it and no runner builds it.
 The honest resolution is an explicit exclude, and leaving that unwritten is what
 keeps the gate observable.
+
+### `generated/client.ts` is meant to be excluded
+
+One orphan proves the gate fires. It takes a second file to prove an **exclude
+clears one**, and without it a broken exclude would look exactly like a
+repository that happened to have nothing to exclude — a green run either way.
+So `generated/client.ts` is a real TypeScript file under no component, and
+`.lydite/components.yml` carries `excludes: ["generated/**"]` for it.
+
+It is generated code on purpose. lydite deliberately does **not** special-case a
+generated file: recognising one means reading it, and a gate that reads files
+has to be right about every language it meets. So the exclude is where a
+repository says so, in a line a reviewer sees — and this repository is where
+that decision is observable rather than only argued.
+
+The two files together are the whole gate. Deleting either leaves one branch of
+it untested against a real repository.
 
 ### The four mutation cases
 

@@ -52,3 +52,9 @@ components:
     # with "No test files found".
     depends_on: [api]
     watch: ["docs/openapi.json"]
+
+# generated/client.ts is derived from docs/openapi.json and tested by nobody.
+# Excluding it is the reviewable statement that somebody decided that, and it is
+# the half of the orphan gate scripts/seed.ts cannot demonstrate: one file proves
+# the gate fires, and it takes a second to prove an exclude clears it.
+excludes: ["generated/**"]
