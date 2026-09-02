@@ -1,0 +1,18 @@
+{
+  "api": {
+    "covered": 18,
+    "total": 29
+  },
+  "sdk": {
+    "covered": 8,
+    "total": 28
+  },
+  "tally": {
+    "covered": 40,
+    "total": 57
+  },
+  "web": {
+    "covered": 29,
+    "total": 77
+  }
+}
